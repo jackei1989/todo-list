@@ -1,0 +1,16 @@
+{
+    "name": "jackei/todo",
+    "description": "A Simple Todo List Project (with Ajax,Php and Mysql)",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jabar Mohammadi",
+            "email": "jabar.mohammadi.dev@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "hekmatinasser/verta": "^1.10"
+    }
+}
