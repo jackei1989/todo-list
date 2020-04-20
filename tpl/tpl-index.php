@@ -4,18 +4,18 @@
   <meta charset="UTF-8">
   <title><?= SITE_TITLE ?></title>
   <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/style.css">
-
 </head>
-<?php
-echo implode('-',$tasks) .' ' . rand(100,9999);
-
-?>
 <body>
 <!-- partial:index.partial.html -->
-<div class="page">
+<div id="msg">
+    
+</div>
+<div class="page"> 
   <div class="pageHeader">
+    
     <div class="title">Dashboard</div>
-    <div class="userPanel"><i class="fa fa-chevron-down"></i><span class="username">John Doe </span><img src="https://s3.amazonaws.com/uifaces/faces/twitter/kolage/73.jpg" width="40" height="40"/></div>
+    <div class="userPanel"><a href="?action=sign-out"><i class="fa fa-sign-out"></a></i><span class="username"><?= $user[0]->name ?> </span><img src="<?= $grav_url = "https://www.gravatar.com/avatar/" . md5( strtolower( trim( $user[0]->email ) ) )
+ ?>" width="40" height="40"/></div>
   </div>
   <div class="main">
     <div class="nav">
@@ -24,59 +24,82 @@ echo implode('-',$tasks) .' ' . rand(100,9999);
           <input type="search" placeholder="Search"/>
         </div>
       </div>
+<!-- start folders section -->
       <div class="menu">
-        <div class="title">Navigation</div>
-        <ul>
-          <li> <i class="fa fa-home"></i>Home</li>
-          <li><i class="fa fa-signal"></i>Activity</li>
-          <li class="active"> <i class="fa fa-tasks"></i>Manage Tasks</li>
-          <li> <i class="fa fa-envelope"></i>Messages</li>
+        <div class="title">Folders</div>
+        <ul id="folders">
+        <a class="<?= (($_GET['folder_id'] === $folder->id) ? "active" : ""); ?>" href="<?= BASE_URL ?>"><li><i class="fa fa-folder" ></i>All</li></a>
+          <!-- start php folders code section -->
+          <?php foreach($folders as $folder): ?>
+            <a class="<?= (($_GET['folder_id'] === $folder->id) ? "active" : ""); ?>" href="?folder_id=<?= $folder->id ?>&name=<?= $folder->name ?>"><li id="folder-name"><i class="fa fa-folder"></i><?= $folder->name?><a href="?delete_folder=<?= $folder->id ?>" onclick="return confirm('Are you sure delete this folder?');"><i class="fa fa-trash-o"></i></a></li></a>          
+          <?php endforeach; ?>
+          <!-- end php folders code section -->
         </ul>
+        <div>
+          <input id="add-new-folder" type="text" placeholder="Add New Folder" style="width: 60%"/>
+          <button class="btn" id="add-folder-btn"><i class="fa fa-plus"></i></button>
+        </div>
       </div>
+<!-- end folder section -->
     </div>
     <div class="view">
       <div class="viewHeader">
-        <div class="title">Manage Tasks</div>
+        <div class="title" style="width: 25%;">
+        <input style="width: 160%;" id="addNewTask" type="text" placeholder="Add New Task"/>
+        </div>
         <div class="functions">
-          <div class="button active">Add New Task</div>
           <div class="button">Completed</div>
-          <div class="button inverz"><i class="fa fa-trash-o"></i></div>
+          <div class="button active">Add New Task</div>
         </div>
       </div>
+<!-- start tasks Section -->
       <div class="content">
-        <div class="list">
+        <div class="list">       
+          <div class="title" id="folder-title">Folder Name : <span class="folder-name"><?= (!isset($_GET['name'])) ? 'All': $folderName; ?></span></div>
           <div class="title">Today</div>
           <ul>
-            <li class="checked"><i class="fa fa-check-square-o"></i><span>Update team page</span>
+            <!-- start php tasks code section -->
+            <?php if(sizeof($tasks)): ?>
+          <?php foreach($tasks as $task): ?>          
+            <li class="<?= ($task->is_done ? 'checked' : ''); ?>"><i id="done" data-taskId= <?= $task->id ?> class="clickable fa fa-<?= ($task->is_done ? 'check-square-o' : 'square-o'); ?>"></i><span><?= $task->title ?></span>
               <div class="info">
-                <div class="button green">In progress</div><span>Complete by 25/04/2014</span>
+                <span id="created-at">Created at <?= $task->created_at ?></span><a href="?delete_task=<?= $task->id ?>" onclick="return confirm('Are you sure delete this item?');"><i class="fa fa-trash-o"></i></a>
               </div>
             </li>
-            <li><i class="fa fa-square-o"></i><span>Design a new logo</span>
-              <div class="info">
-                <div class="button">Pending</div><span>Complete by 10/04/2014</span>
-              </div>
+          <?php endforeach; ?>
+          <?php else: ?>
+            <li>
+              No Task
             </li>
-            <li><i class="fa fa-square-o"></i><span>Find a front end developer</span>
-              <div class="info"></div>
-            </li>
-          </ul>
-        </div>
-        <div class="list">
-          <div class="title">Tomorrow</div>
-          <ul>
-            <li><i class="fa fa-square-o"></i><span>Find front end developer</span>
-              <div class="info"></div>
-            </li>
+          <?php endif; ?>
+          
+            <!-- end php tasks code section -->
           </ul>
         </div>
       </div>
+<!-- end tasks section -->
     </div>
   </div>
 </div>
 <!-- partial -->
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<!-- javascript -->
   <script  src="<?= BASE_URL ?>assets/js/script.js"></script>
-
+  <script>
+    newTaskInput.addEventListener('keyup', event => {
+      taskAdd(event);
+    });
+    function taskAdd(event) {
+      if (event.which == 13 || event.keyCode == 13) {
+        let inputValue = newTaskInput.value;
+        let data = {
+          action: 'addTask',
+          taskTitle: inputValue,
+          folderId: <?= $_GET['folder_id'] ?? "null" ?>
+        }
+        addTaskAjax(data);
+      };     
+    }
+  </script>
+  
 </body>
 </html>

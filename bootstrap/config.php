@@ -1,4 +1,9 @@
-<?php
+<?php 
 
 // database config
-list($host,$dataBase,$user,$pass) = ['localhost','tasks','root',''];
+$dataBase = (object) [
+    "host" => "localhost",
+    "dbname" => "todo-list",
+    "user" => "root",
+    "password" => ''
+];

@@ -3,15 +3,39 @@
 html {
   background-image: url(http://www.ultraimg.com/images/2UeGfhZ.jpg);
 }
-
+@font-face {
+  font-family: "isans";
+  src: url(/assets/fonts/isans.woff) format("woff");
+}
 body {
   padding: 0px;
   margin: 0px;
   font-family: "Open Sans";
   font-size: 14px;
-  font-smoothing: antialiased;
+  /* font-smoothing: antialiased; */
 }
 
+input {
+  padding: 7px 10px;
+  border: 1px solid #eee;
+  border-radius: 5px;
+}
+
+span.folder-name {
+  color: #d83011;
+}
+
+span#created-at {
+  font-size: 13px;
+  margin-right: 10px;
+}
+
+.btn {
+  padding: 7px 10px;
+  border: 1px solid green;
+  border-radius: 5px;
+  color: green;
+}
 .page {
   position: absolute;
   width: 80%;
@@ -120,6 +144,22 @@ body {
 .main .nav .menu ul {
   padding-left: 0px;
 }
+.main .nav .menu ul a.active {
+color: #79BC46;
+}
+.main .nav .menu ul a {
+  text-decoration: none;
+  color: #54b9cd;
+}
+i.fa.fa-trash-o {
+  float: right;
+  color: #F44336;
+}
+i.fa.fa-trash-o:hover {
+  font-weight: 700;
+  color: #c70e00;
+}
+
 .main .nav .menu ul li {
   cursor: pointer;
   list-style: none;
@@ -266,4 +306,8 @@ body {
 
 .clear {
   clear: both;
+}
+
+.clickable {
+  cursor: pointer;
 }

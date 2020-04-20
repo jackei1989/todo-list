@@ -1,10 +1,83 @@
-(function() {
-  /*
-Inspired by dribble.com/shots/1507858-Dashboard
-*/
+/** JAVA SCRIPT ALL CODE */
+
+const addFolderInput = document.getElementById('add-new-folder');
+const addFolderBtn = document.getElementById('add-folder-btn');
+const msg = document.getElementById('msg');
+const foldersList = document.getElementById('folders');
+const newTaskInput = document.getElementById('addNewTask');
+const doneElement = document.querySelectorAll('#done');
+// event listener
+addFolderBtn.addEventListener('click', ajax);
+doneElement.forEach((value) => {
+  value.addEventListener('click', event => {
+    let element = event.target;
+    element.addEventListener('click', doneSwitch(element));
+  })
+})
+
+  
+// functions
+function ajax() {
+  let inputValue = addFolderInput.value;
+  let data = {
+    action: 'addFolder',
+    folderName: inputValue
+  }
+
+  let formData = new FormData(); 
+  for (let key in data) {
+    formData.append(key,data[key])
+  };
+
+  fetch('process/ajax-handler.php',{
+    method: 'POST',
+    body: formData
+  })
+  .then(response => response.text())
+  .then(data =>  displayResult(data))
+  .catch((error) => console.log("Error: " + error));
+};
+
+function displayResult(data) {
+  if(data.indexOf('error') > -1) {
+    msg.innerHTML = data
+    setTimeout(() => {
+      msg.firstElementChild.remove();        
+    }, 2000);
+  } else {
+  window.location.reload()
+  }
+}
+
+function addTaskAjax(data) {
+  let formData = new FormData(); 
+  for (let key in data) {
+    formData.append(key,data[key])
+  };
+  fetch('process/ajax-handler.php',{
+    method: 'POST',
+    body: formData
+  })
+  .then(response => response.text())
+  .then(data => displayResult(data))
+  .catch((error) => console.log("Error: " + error));
+}
+
+function doneSwitch(element) {
+  let formData = new FormData(); 
+  formData.append("taskId", element.getAttribute('data-taskId'));
+  formData.append("action", "done");
+  fetch('process/ajax-handler.php',{
+      method: 'POST',
+      body: formData
+  })
+  .then(response => response.text())
+  .then(data => displayResult(data))
+  .catch((error) => console.log("Error: " + error));
+}
+
+newTaskInput.focus();
 
 
-}).call(this);
 
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiPGFub255bW91cz4iXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFBQTs7OztBQUFBIiwic291cmNlc0NvbnRlbnQiOlsiIyMjXG5JbnNwaXJlZCBieSBkcmliYmxlLmNvbS9zaG90cy8xNTA3ODU4LURhc2hib2FyZFxuIyMjIl19
-//# sourceURL=coffeescript
+
